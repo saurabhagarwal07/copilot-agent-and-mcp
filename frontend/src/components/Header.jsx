@@ -4,12 +4,27 @@ import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const username = useAppSelector(state => state.user.username);
+  const role = useAppSelector(state => state.user.role);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
+  };
+
+  const roleLabel = role === 'administrator' ? 'Admin' : role === 'member' ? 'Member' : role || 'Member';
+  const isAdmin = role === 'administrator';
+  const roleBadgeStyle = {
+    fontSize: '0.72rem',
+    fontWeight: 600,
+    padding: '0.15rem 0.55rem',
+    borderRadius: '999px',
+    background: isAdmin ? 'rgba(255,215,0,0.25)' : 'rgba(255,255,255,0.18)',
+    color: isAdmin ? '#ffe066' : 'rgba(255,255,255,0.85)',
+    border: isAdmin ? '1px solid rgba(255,215,0,0.5)' : '1px solid rgba(255,255,255,0.3)',
+    letterSpacing: '0.03em',
+    textTransform: 'capitalize',
   };
 
   return (
@@ -66,7 +81,15 @@ const Header = () => {
               Favorites
             </a>
           </nav>
-          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-block' }}>Hi, {username}</span>
+          <span style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            Hi, {username}
+            <span
+              id="user-role-badge"
+              style={roleBadgeStyle}
+            >
+              {roleLabel}
+            </span>
+          </span>
           <button id="logout" onClick={handleLogout} style={{ padding: '0.3rem 1rem', fontSize: '1rem', background: '#fff', color: '#20b2aa', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
         </div>
       )}
